@@ -9,4 +9,7 @@ RUN apt-get update && apt-get install curl gnupg -y \
   && apt-get install google-chrome-stable -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
-CMD ["npx @puppeteer/browsers install chrome@latest"]
+COPY start.sh /usr/src/app/start.sh
+RUN chmod +x /usr/src/app/start.sh
+
+CMD ["/usr/src/app/start.sh"]
