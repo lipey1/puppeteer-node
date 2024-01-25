@@ -11,4 +11,4 @@ RUN apt-get update && apt-get install curl gnupg -y \
 
 RUN cd /home && ls
 
-RUN chmod a+x config/chrome
+CMD ["chmod", "+x", "/config/chrome"]
