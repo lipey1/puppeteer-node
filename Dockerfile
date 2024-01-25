@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install curl gnupg -y \
   && rm -rf /var/lib/apt/lists/*
 
 COPY start.sh /usr/src/app/start.sh
+RUN apt-get update && apt-get install -y openssh-server
 RUN chmod +x /usr/src/app/start.sh
 
 CMD ["/usr/src/app/start.sh"]
