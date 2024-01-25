@@ -9,4 +9,4 @@ RUN apt-get update && apt-get install curl gnupg -y \
   && apt-get install google-chrome-stable -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
-RUN chmod a+x /config/chrome
+RUN chmod a+x /chrome
