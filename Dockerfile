@@ -1,22 +1,25 @@
 FROM node:20.9.0
 
-# 1. Instala dependências básicas e configura o suporte a pacotes non-free
+# 1. Configura repositórios e aceita licença da Microsoft
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common \
     debconf-utils \
     && sed -i 's/Components: main/Components: main contrib non-free/g' /etc/apt/sources.list.d/debian.sources \
-    && apt-get update
+    && apt-get update \
+    && echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
 
-# 2. Aceita a licença da Microsoft (EULA) e instala as fontes + LibreOffice
-RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections \
-    && apt-get install -y --no-install-recommends \
+# 2. Instala Fontes (MS + Carlito para Calibri), LibreOffice e dependências
+RUN apt-get install -y --no-install-recommends \
     ttf-mscorefonts-installer \
     fonts-liberation \
     fonts-lyx \
+    # Fontes 'Carlito' e 'Caladea' são clones perfeitos da Calibri e Cambria
+    fonts-crosextra-carlito \
+    fonts-crosextra-caladea \
     libreoffice \
     libreoffice-java-common \
     default-jre \
-    # --- Suas dependências anteriores do Chrome ---
+    # Suas dependências de sistema (Chrome/Puppeteer)
     ca-certificates \
     libasound2 \
     libatk-bridge2.0-0 \
@@ -55,7 +58,7 @@ RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula sele
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# 3. Instalação do Chrome (mantendo sua lógica original)
+# 3. Instalação do Chrome
 RUN apt-get update \
      && apt-get install -y wget gnupg ca-certificates procps libxss1 \
      && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -66,7 +69,7 @@ RUN apt-get update \
      && wget --quiet https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -O /usr/sbin/wait-for-it.sh \
      && chmod +x /usr/sbin/wait-for-it.sh
 
-# Atualiza o cache de fontes
-RUN fc-cache -f -v
+# 4. CRUCIAL: Atualiza o cache do sistema e pré-inicializa o LibreOffice para indexar as fontes
+RUN fc-cache -f -v && soffice --headless --terminate_after_init
 
 ADD package.json /
