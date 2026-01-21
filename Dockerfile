@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:20.9.0
 
 RUN apt-get -y update \
   && apt-get -y install --no-install-recommends \
