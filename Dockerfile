@@ -38,6 +38,9 @@ RUN apt-get -y update \
   lsb-release \
   wget \
   xdg-utils \
+  libreoffice \
+  libreoffice-java-common \
+  default-jre \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
   
